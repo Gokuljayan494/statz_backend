@@ -3,7 +3,9 @@ const {
   login,
   sendLoginOtp,
   register,
+  userDetails,
 } = require("../controller/userController");
+const { protect } = require("../controller/authController");
 
 const router = express.Router();
 
@@ -11,7 +13,6 @@ const router = express.Router();
 
 router.post("/register", register);
 router.post("/login", login);
-
-// router.post("/otpLogin", sendLoginOtp);
+router.get("/userDetails", protect, userDetails);
 
 module.exports = router;

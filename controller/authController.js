@@ -10,6 +10,9 @@ const User = require("../Model/UserModel");
  */
 exports.protect = async (req, res, next) => {
   try {
+    console.log("====================================");
+    console.log(req.headers.authorization);
+    console.log("====================================");
     // check is there the token in headers
     if (req.headers.authorization === undefined) {
       throw new Error(message.NO_TOKEN);

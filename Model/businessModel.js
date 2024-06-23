@@ -22,6 +22,9 @@ const businessSchema = mongoose.Schema(
     registerNumber: String,
     gst_number: String,
     licence: String,
+    place: {
+      type: String,
+    },
     location: {
       type: {
         type: String,
@@ -48,6 +51,10 @@ const businessSchema = mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: "category",
       index: true,
+    },
+    active: {
+      type: Boolean,
+      default: true,
     },
   },
   {

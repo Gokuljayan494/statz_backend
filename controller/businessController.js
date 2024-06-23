@@ -21,10 +21,11 @@ exports.addBusiness = async (req, res) => {
     } = req.body;
     const id = req.user;
 
+    console.log(req.body);
     const business = await Business.create({
       parent_Catagories: category,
       category: businessType,
-      location,
+      place: location,
       license,
       gst_number: gst,
       phone,
@@ -126,6 +127,33 @@ exports.getShop = async (req, res) => {
       throw new Error("Something Went Wrong");
     }
     res.status(200).json({ status: "Success", data: shop });
+  } catch (err) {
+    res.status(400).json({ status: "Fail", message: `Error:${err.message}` });
+  }
+};
+
+exports.getCategoriesList = async (req, res) => {
+  try {
+    const categories = await Category.aggregate([
+      { $match: { parentId: null } },
+      { $project: { _id: 1, name: 1 } },
+    ]);
+    res.status(200).json({ status: "Success", data: categories });
+  } catch (err) {
+    res.status(400).json({ status: "Fail", message: `Error:${err.message}` });
+  }
+};
+
+exports.getSubCategories = async (req, res) => {
+  try {
+    const id = req.query.id;
+
+    const subCategory = await Category.aggregate([
+      { $match: { parentId: new ObjectId(id) } },
+      { $project: { _id: 1, name: 1 } },
+    ]);
+
+    res.status(200).json({ status: "Success", data: subCategory });
   } catch (err) {
     res.status(400).json({ status: "Fail", message: `Error:${err.message}` });
   }

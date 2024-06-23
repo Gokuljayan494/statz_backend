@@ -2,6 +2,10 @@ const User = require("../Model/UserModel");
 const { message } = require("../utils/constants");
 const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/email");
+const Business = require("../Model/businessModel");
+const mongoose = require("mongoose");
+
+const ObjectId = mongoose.Types.ObjectId;
 
 const generateOtp = function (length) {
   return Math.floor(Math.random() * Math.pow(10, length))
@@ -120,6 +124,28 @@ exports.register = async (req, res) => {
         token_type: message.BEARER,
       },
     });
+  } catch (err) {
+    res.status(400).json({
+      status: message.FAIL_MESSAGE,
+      message: `${message.ERROR} :${err.message} `,
+    });
+  }
+};
+
+exports.userDetails = async (req, res) => {
+  try {
+    console.log(`-------------`);
+    const user = req.user;
+
+    const currentUser = await User.findById(user);
+
+    const business = await Business.aggregate([
+      { $match: { userId: new ObjectId(user), active: true } },
+    ]);
+
+    const result = { user: currentUser, business };
+
+    res.status(200).json({ status: "Success", data: result });
   } catch (err) {
     res.status(400).json({
       status: message.FAIL_MESSAGE,

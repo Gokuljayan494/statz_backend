@@ -20,11 +20,7 @@ const businessRouter = require("./router/businessRouter");
 
 //middleware
 app.use(express.json());
-const allowedOrigins = [
-  "http://192.168.225.202:3000",
-  "http://10.0.2.2:3000",
-  "http://192.168.225.202:8081", // Added "http://" and port 8081
-];
+const allowedOrigins = [];
 
 const corsOptions = {
   origin: (origin, callback) => {
@@ -37,7 +33,7 @@ const corsOptions = {
   credentials: true,
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 //routes
 app.use("/user/", userRouter);
